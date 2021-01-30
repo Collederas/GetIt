@@ -30,16 +30,14 @@ public class LevelBuilder : MonoBehaviour
     {
         // Debug.Log("Pos " +  _positionIteratorRef + " is occupied: " + (levelTilemap.GetTile(_positionIteratorRef) != null));
         // Debug.Log("We are out of bounds? --> "  + OutOfLevelBounds());
-
-        Generate();
     }
 
     private void Start()
     {
         var startingPoint = new Vector3Int((int)-levelBoundaries.x / 2, (int)levelBoundaries.y / 2, 0);
-        levelTilemap.SetTile(startingPoint, wallTile);
         _positionIteratorRef = startingPoint;
-        Generate();
+        GeneratePerimeter(startingPoint);
+        GenerateInternal();
     }
 
     private bool OutOfLevelBounds()
@@ -79,35 +77,46 @@ public class LevelBuilder : MonoBehaviour
         }
     }
 
-    private void MoveIteratorRef()
+    private void MoveIteratorRef(int moveAmountX, ref Vector3Int iterator)
     {
-        var moveAmountX = Random.Range(spacing, spacing + 3);
-        var newPositionX = _positionIteratorRef.x + moveAmountX;
+        var newPositionX = iterator.x + moveAmountX;
         var amountBeyondBoundaryX = newPositionX - (levelBoundaries.x / 2);
         
         if (amountBeyondBoundaryX > 0)
         {
             // We are beyond boundary, so we start over from next line
-            _positionIteratorRef.y -= 1;
-            _positionIteratorRef.x = -(levelBoundaries.x/2) + amountBeyondBoundaryX;
+            iterator.y -= 1;
+            iterator.x = -(levelBoundaries.x/2) + amountBeyondBoundaryX;
         }
         else
         {
-            _positionIteratorRef.x = newPositionX;
+            iterator.x = newPositionX;
         }
     }
 
     private Vector3Int GetNewSpawnPoint()
     {
-        MoveIteratorRef();
+        var moveAmountX = Random.Range(spacing, spacing + 3);
+        MoveIteratorRef(moveAmountX, ref _positionIteratorRef);
 
         while(levelTilemap.GetTile(_positionIteratorRef) != null)
-            MoveIteratorRef();
+            MoveIteratorRef(moveAmountX, ref _positionIteratorRef);
         
         return _positionIteratorRef;
     }
 
-    private void Generate()
+    private void GeneratePerimeter(Vector3Int startingPos)
+    {
+        var position = startingPos;
+        while (!OutOfLevelBounds())
+        {
+            MoveIteratorRef(1, ref position);
+            if(position.x == Mathf.Abs(levelBoundaries.x/2) || position.y == Mathf.Abs((levelBoundaries.y/2)))
+                levelTilemap.SetTile(position, wallTile);
+        }
+    }
+    
+    private void GenerateInternal()
     {
         while (!OutOfLevelBounds())
         {
