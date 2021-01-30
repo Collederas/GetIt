@@ -2066,7 +2066,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fac5a3ab49e7548f096860f4b572944f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallTile: {fileID: 11400000, guid: 0d27034e97c2b4c17ab59a1cf854c247, type: 2}
+  wallTile: {fileID: 11400000, guid: e3354e472912f4f408b323d1e1ad1f06, type: 2}
   levelBoundaries: {x: 10, y: 10}
   maxTilesInGroup: 5
   spacing: 3
