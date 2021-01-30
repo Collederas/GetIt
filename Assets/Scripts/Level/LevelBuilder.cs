@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class LevelBuilder : MonoBehaviour
@@ -12,15 +16,40 @@ public class LevelBuilder : MonoBehaviour
     public int maxTilesInGroup = 5;
     public int spacing = 3;  // How much space in between tiles?
     public Tilemap levelTilemap;
+    public Canvas winCanvas;
+    public Canvas loseCanvas;
 
-    private Vector3Int _positionIteratorRef;
+    public Dropper dropper;
+
+    private int _levelReached = 0;
     
+    private Vector3Int _positionIteratorRef;
+
     private void Start()
     {
+        NewLevel();
+    }
+
+    public void RestartGame()
+    {
+        _levelReached = 0;
+        NewLevel();
+    }
+
+    public void NewLevel()
+    {
+        _levelReached++;
+        levelTilemap.ClearAllTiles();
+        var canvasText = winCanvas.gameObject.GetComponentInChildren<Text>();
+        canvasText.text = "You reached level: " + _levelReached;
+        loseCanvas.gameObject.SetActive(false);
+        winCanvas.gameObject.SetActive(false);
+        dropper.Initialize();
         var startingPoint = new Vector3Int((int)-levelBoundaries.x / 2, (int)levelBoundaries.y / 2, 0);
         _positionIteratorRef = startingPoint;
         GeneratePerimeter(startingPoint);
         GenerateInternal();
+        GeneratePathfinderGraph();
     }
 
     private bool OutOfLevelBounds(Vector3Int position)
@@ -34,9 +63,9 @@ public class LevelBuilder : MonoBehaviour
     }
 
     // Checks that there is enough room around chosen spawn point
-    private bool IsSpaced(Vector3Int potentialSpawnPoint)
+    private bool IsSpaced(Vector3Int previousSpawnPoint, Vector3Int newSpawnPoint, int radius)
     {
-        
+        return true;
     }
 
     private Vector3Int SpawnPosRepresentationToCoord(Vector3Int position, int spawnPosIndicator)
@@ -58,9 +87,12 @@ public class LevelBuilder : MonoBehaviour
         {
             var spawnPosRepr= Random.Range(1, 4);
             var spawnPos = SpawnPosRepresentationToCoord(position, spawnPosRepr);
-            
+
             if (!IsPositionOutOfBounds(spawnPos))
+            {
                 levelTilemap.SetTile(spawnPos, wallTile);
+                position = spawnPos;
+            }
             
             spawnedTiles++;
         }
@@ -115,6 +147,26 @@ public class LevelBuilder : MonoBehaviour
                 SpawnTileGroup(spawnPos);
             }
         }
-        Debug.Log("Finish at " + _positionIteratorRef);
     }
+
+    private void GeneratePathfinderGraph()
+    {
+        var gg = AstarPath.active.data.gridGraph;
+        Debug.Log(gg);
+        int width = levelBoundaries.x;
+        int depth = levelBoundaries.y;
+        float nodeSize = 1;
+
+        gg.center = new Vector3(0, 0, 0);
+
+        gg.SetDimensions(width, depth, nodeSize);
+        StartCoroutine(ScanGraph());
+    }
+
+    private IEnumerator ScanGraph()
+    {
+        yield return new WaitForSeconds(0.1f);
+        AstarPath.active.Scan();
+    }
+    
 }
