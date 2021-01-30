@@ -14,24 +14,7 @@ public class LevelBuilder : MonoBehaviour
     public Tilemap levelTilemap;
 
     private Vector3Int _positionIteratorRef;
-    public InputAction fireAction;
-
-    private void Awake()
-    {
-        fireAction.performed += Fire;
-    }
-
-    void OnEnable()
-    {
-        fireAction.Enable();
-    }
-
-    void Fire(InputAction.CallbackContext ctx)
-    {
-        // Debug.Log("Pos " +  _positionIteratorRef + " is occupied: " + (levelTilemap.GetTile(_positionIteratorRef) != null));
-        // Debug.Log("We are out of bounds? --> "  + OutOfLevelBounds());
-    }
-
+    
     private void Start()
     {
         var startingPoint = new Vector3Int((int)-levelBoundaries.x / 2, (int)levelBoundaries.y / 2, 0);
@@ -40,14 +23,20 @@ public class LevelBuilder : MonoBehaviour
         GenerateInternal();
     }
 
-    private bool OutOfLevelBounds()
+    private bool OutOfLevelBounds(Vector3Int position)
     {
-        return _positionIteratorRef.y < -(levelBoundaries.y/2);
+        return position.y < -(levelBoundaries.y/2);
     }
 
     private bool IsPositionOutOfBounds(Vector3Int position)
     {
         return _positionIteratorRef.y > Mathf.Abs(levelBoundaries.y/2) || _positionIteratorRef.x > Mathf.Abs(levelBoundaries.x/2);
+    }
+
+    // Checks that there is enough room around chosen spawn point
+    private bool IsSpaced(Vector3Int potentialSpawnPoint)
+    {
+        
     }
 
     private Vector3Int SpawnPosRepresentationToCoord(Vector3Int position, int spawnPosIndicator)
@@ -86,7 +75,7 @@ public class LevelBuilder : MonoBehaviour
         {
             // We are beyond boundary, so we start over from next line
             iterator.y -= 1;
-            iterator.x = -(levelBoundaries.x/2) + amountBeyondBoundaryX;
+            iterator.x = -(levelBoundaries.x/2) + amountBeyondBoundaryX - 1;
         }
         else
         {
@@ -108,20 +97,20 @@ public class LevelBuilder : MonoBehaviour
     private void GeneratePerimeter(Vector3Int startingPos)
     {
         var position = startingPos;
-        while (!OutOfLevelBounds())
+        while (!OutOfLevelBounds(position))
         {
-            MoveIteratorRef(1, ref position);
-            if(position.x == Mathf.Abs(levelBoundaries.x/2) || position.y == Mathf.Abs((levelBoundaries.y/2)))
+            if (Mathf.Abs(position.x) == levelBoundaries.x/2 || Mathf.Abs(position.y) == (levelBoundaries.y/2))
                 levelTilemap.SetTile(position, wallTile);
+            MoveIteratorRef(1, ref position);
         }
     }
     
     private void GenerateInternal()
     {
-        while (!OutOfLevelBounds())
+        while (!OutOfLevelBounds(_positionIteratorRef))
         {
             var spawnPos = GetNewSpawnPoint();
-            if (!OutOfLevelBounds())
+            if (!OutOfLevelBounds(_positionIteratorRef))
             {
                 SpawnTileGroup(spawnPos);
             }

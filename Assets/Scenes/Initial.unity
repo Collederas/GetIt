@@ -214,26 +214,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallTile: {fileID: 11400000, guid: e3354e472912f4f408b323d1e1ad1f06, type: 2}
-  levelBoundaries: {x: 10, y: 10}
-  maxTilesInGroup: 5
+  levelBoundaries: {x: 20, y: 20}
+  maxTilesInGroup: 3
   spacing: 3
   levelTilemap: {fileID: 1209157078}
-  fireAction:
-    m_Name: Fire
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 8589116a-aa4d-462b-9478-2c08a45ede78
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: af1b74d0-ea3d-46e5-96bc-9150863c4233
-      m_Path: <Keyboard>/enter
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Fire
-      m_Flags: 0
 --- !u!4 &425354239
 Transform:
   m_ObjectHideFlags: 0
