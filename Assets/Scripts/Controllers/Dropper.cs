@@ -32,9 +32,10 @@ public class Dropper : MonoBehaviour
 
     private IEnumerator DisableCollection()
     {
+        var thisObj = gameObject;
         var cachedTag = gameObject.tag;
-        gameObject.tag = "NoCollect";
+        thisObj.tag = "NoCollect";
         yield return new WaitForSeconds(2f);
-        gameObject.tag = cachedTag;
+        thisObj.tag = cachedTag;
     }
 }

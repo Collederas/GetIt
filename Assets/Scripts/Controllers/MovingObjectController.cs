@@ -15,8 +15,4 @@ public abstract class MovingObjectController : MonoBehaviour
         // Transform is only a Vector3 so build delta as a 3D vector. 
         transform.position += new Vector3(delta.x, delta.y, 0);
     }
-
-    public virtual void Fall(Vector2 fallTargetPosition)
-    {
-    }
 }

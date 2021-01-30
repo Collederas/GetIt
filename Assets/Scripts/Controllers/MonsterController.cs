@@ -29,6 +29,10 @@ public class MonsterController : MonoBehaviour
     {
         if (_pathFinder.pathPending || (!_pathFinder.reachedEndOfPath && _pathFinder.hasPath)) return;
         _pathFinder.destination = PickRandomPoint();
-        // _pathFinder.SearchPath();
+    }
+
+    public void OnCollected()
+    {
+        Debug.Log("You Lose");
     }
 }

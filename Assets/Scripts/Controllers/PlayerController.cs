@@ -14,4 +14,9 @@ public class PlayerController : MovingObjectController
     {
         Velocity = _acceleration * speed;
     }
+
+    public void OnCollected()
+    {
+        Debug.Log("You win :)");
+    }
 }

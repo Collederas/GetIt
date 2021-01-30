@@ -18,7 +18,6 @@ public class InstanceManager : ScriptableObject
 
     public void InstantiateAsset(AssetReference asset, Vector2 position)
     {
-        Debug.Log("intantiate!");
         asset.InstantiateAsync(position, Quaternion.identity).Completed += handle =>
         {
             _instantiatedHandles.Add(handle);
