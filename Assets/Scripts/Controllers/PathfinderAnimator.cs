@@ -16,7 +16,6 @@ public class PathfinderAnimator : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(AIPath.velocity.magnitude);
         _animator.SetFloat("Speed", AIPath.velocity.magnitude);
     }
 }
