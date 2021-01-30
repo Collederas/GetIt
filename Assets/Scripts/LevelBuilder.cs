@@ -27,10 +27,10 @@ public class LevelBuilder : MonoBehaviour
 
     void Fire(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Pos " +  _positionIteratorRef + " is occupied: " + (levelTilemap.GetTile(_positionIteratorRef) != null));
-        Debug.Log("We are out of bounds? --> "  + OutOfLevelBounds());
+        // Debug.Log("Pos " +  _positionIteratorRef + " is occupied: " + (levelTilemap.GetTile(_positionIteratorRef) != null));
+        // Debug.Log("We are out of bounds? --> "  + OutOfLevelBounds());
 
-        MoveIteratorRef();
+        Generate();
     }
 
     private void Start()
@@ -67,22 +67,17 @@ public class LevelBuilder : MonoBehaviour
 
     private Vector3Int GetNewSpawnPoint()
     {
-        while (levelTilemap.GetTile(_positionIteratorRef) != null)
-        {
-            MoveIteratorRef();
-        }
-
+        MoveIteratorRef();
         return _positionIteratorRef;
     }
 
     private void Generate()
     {
-        while (!OutOfLevelBounds())
+        while (!OutOfLevelBounds() || levelTilemap.GetTile(_positionIteratorRef) != null)
         {
             var spawnPoint = GetNewSpawnPoint();
             Debug.Log("Spawn at " + spawnPoint);
         }
-        
         Debug.Log("Finish at " + _positionIteratorRef);
     }
 }
