@@ -2,13 +2,7 @@
 
 public abstract class MovingObjectController : MonoBehaviour
 {
-    public float maxSpeed = 2f;
     public Vector2 Velocity { get; set; }
-
-    protected virtual void Update()
-    {
-        Velocity = Vector2.ClampMagnitude(Velocity, maxSpeed);
-    }
 
     protected virtual void FixedUpdate()
     {

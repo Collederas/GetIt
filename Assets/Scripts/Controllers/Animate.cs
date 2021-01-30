@@ -21,12 +21,12 @@ public class Animate : MonoBehaviour
         var vertical = Vector2.Dot(velocityNormalized, Vector2.up);
         var horizontal = Vector2.Dot(velocityNormalized, Vector2.right);
         var speed = movingObject.Velocity.magnitude / Time.deltaTime;
-
-        if ((horizontal != 0) | (vertical != 0))
-        {
-            animator.SetFloat("Horizontal", horizontal);
-            animator.SetFloat("Vertical", vertical);
-        }
+        Debug.Log(movingObject.Velocity.magnitude);
+        // if ((horizontal != 0) | (vertical != 0))
+        // {
+        //     animator.SetFloat("Horizontal", horizontal);
+        //     animator.SetFloat("Vertical", vertical);
+        // }
 
         animator.SetFloat("Speed", speed);
     }
