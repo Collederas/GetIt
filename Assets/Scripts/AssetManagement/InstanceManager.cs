@@ -10,12 +10,10 @@ public class InstanceManager : ScriptableObject
     
     public void Clear()
     {
-        if (_instantiatedHandles.Count > 0)
+        if (_instantiatedHandles.Count <= 0) return;
+        foreach (var handle in _instantiatedHandles)
         {
-            foreach (var handle in _instantiatedHandles)
-            {
-                Addressables.ReleaseInstance(handle);
-            }
+            Addressables.ReleaseInstance(handle);
         }
     }
 
@@ -30,5 +28,6 @@ public class InstanceManager : ScriptableObject
     public void ReleaseAsset(GameObject gameObject)
     {
         Addressables.ReleaseInstance(gameObject);
+        _instantiatedHandles.Clear();
     }
 }

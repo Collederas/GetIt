@@ -11,7 +11,7 @@ public class LevelBuilder : MonoBehaviour
 {
     public GameObject player;
     public GameObject monster;
-    
+    public InstanceManager instanceManager;
     public TileBase wallTile;
     public Vector2Int levelBoundaries;
     public int maxTilesInGroup = 5;
@@ -69,6 +69,8 @@ public class LevelBuilder : MonoBehaviour
         
         monster.transform.position = new Vector3(monsterSpawnPoint.x, monsterSpawnPoint.y , 0);
         player.transform.position = new Vector3(playerSpawnPoint.x, playerSpawnPoint.y , 0);
+        
+        player.GetComponent<PlayerController>().Velocity = Vector2.zero;
         
         if(increaseHighScore)
             _levelReached++;
@@ -230,6 +232,11 @@ public class LevelBuilder : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         AstarPath.active.Scan();
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
     
 }

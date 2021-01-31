@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -34,7 +35,9 @@ public class PlayerController : MovingObjectController
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            instanceManager.Clear();
+            var coll = FindObjectOfType<Collectible>();
+            if (coll != null)
+                Addressables.ReleaseInstance(coll.gameObject);
             Time.timeScale = 0;
             menuCanvas.gameObject.GetComponent<MenuManager>().canOpen = false;
 

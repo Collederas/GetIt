@@ -7,6 +7,7 @@ public class MenuManager : MonoBehaviour
     public Canvas menuCanvas;
     public bool canOpen = true;
     private bool _isOpen = false;
+    public LevelBuilder LevelBuilder;
 
     void Awake()
     {
