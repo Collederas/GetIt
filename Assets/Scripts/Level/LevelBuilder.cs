@@ -1,16 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Pathfinding;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class LevelBuilder : MonoBehaviour
 {
-   
+    public GameObject player;
+    public GameObject monster;
+    
     public TileBase wallTile;
     public Vector2Int levelBoundaries;
     public int maxTilesInGroup = 5;
@@ -26,6 +27,10 @@ public class LevelBuilder : MonoBehaviour
     private Vector3Int _positionIteratorRef;
     private List<Vector3Int> g_forbiddenSpawnPoints = new List<Vector3Int>();
 
+    private Vector2Int monsterSpawnPoint = Vector2Int.zero;
+    private Vector2Int playerSpawnPoint = Vector2Int.zero;
+
+
     private void Start()
     {
         NewLevel();
@@ -37,17 +42,42 @@ public class LevelBuilder : MonoBehaviour
         NewLevel();
     }
 
+    private Vector2Int GetRandomPoint()
+    {
+        var xCoord = Random.Range(1, levelBoundaries.x/2 - 2);
+        var yCoord = Random.Range(1, levelBoundaries.y/2 - 2);
+        return new Vector2Int(xCoord, yCoord);
+    }
+
     public void NewLevel()
     {
+        while (Vector2.Distance(playerSpawnPoint, monsterSpawnPoint) < 3)
+        {
+            playerSpawnPoint = GetRandomPoint();
+            monsterSpawnPoint = GetRandomPoint();
+        }
+        
+        monster.transform.position = new Vector3(monsterSpawnPoint.x, monsterSpawnPoint.y , 0);
+        player.transform.position = new Vector3(playerSpawnPoint.x, playerSpawnPoint.y , 0);
+        
         _levelReached++;
+
+        if (_levelReached > PlayerPrefs.GetInt("HighScore"))
+        {
+            PlayerPrefs.SetInt("HighScore", _levelReached);
+        }
+        
+        
+        Time.timeScale = 1;
         levelTilemap.ClearAllTiles();
         var canvasText = winCanvas.gameObject.GetComponentInChildren<Text>();
-        canvasText.text = "You reached level: " + _levelReached;
+        canvasText.text = "You reached Level: " + (_levelReached + 1);
         loseCanvas.gameObject.SetActive(false);
         winCanvas.gameObject.SetActive(false);
         dropper.Initialize();
         var startingPoint = new Vector3Int((int)-levelBoundaries.x / 2, (int)levelBoundaries.y / 2, 0);
         _positionIteratorRef = startingPoint;
+        
         GeneratePerimeter(startingPoint);
         GenerateInternal();
         GeneratePathfinderGraph();
@@ -61,12 +91,6 @@ public class LevelBuilder : MonoBehaviour
     private bool IsPositionOutOfBounds(Vector3Int position)
     {
         return _positionIteratorRef.y > Mathf.Abs(levelBoundaries.y/2) || _positionIteratorRef.x > Mathf.Abs(levelBoundaries.x/2);
-    }
-
-    // Checks that there is enough room around chosen spawn point
-    private bool IsSpaced(Vector3Int previousSpawnPoint, Vector3Int newSpawnPoint, int radius)
-    {
-        return true;
     }
 
     private Vector3Int SpawnPosRepresentationToCoord(Vector3Int position, int spawnPosIndicator)
@@ -84,11 +108,17 @@ public class LevelBuilder : MonoBehaviour
     private List<Vector3Int> GetCoordinatesAroundPoint(Vector3Int point)
     {
         var points = new List<Vector3Int>();
+        points.Add(new Vector3Int(point.x - 1, point.y + 1, point.z));
+        points.Add(new Vector3Int(point.x + 1, point.y + 1, point.z));
+        points.Add(new Vector3Int(point.x, point.y + 1, point.z));
         points.Add(new Vector3Int(point.x - 1, point.y, point.z));
         points.Add(new Vector3Int(point.x + 1, point.y, point.z));
         points.Add(new Vector3Int(point.x - 1, point.y - 1, point.z));
         points.Add(new Vector3Int(point.x, point.y - 1, point.z));
         
+        points.Add(new Vector3Int(point.x - 1, point.y + 2, point.z));
+        points.Add(new Vector3Int(point.x + 1, point.y + 2, point.z));
+        points.Add(new Vector3Int(point.x, point.y + 2, point.z));
         points.Add(new Vector3Int(point.x - 2, point.y, point.z));
         points.Add(new Vector3Int(point.x + 2, point.y, point.z));
         points.Add(new Vector3Int(point.x - 2, point.y - 2, point.z));
@@ -106,7 +136,7 @@ public class LevelBuilder : MonoBehaviour
             var spawnPosRepr= Random.Range(1, 4);
             var spawnPos = SpawnPosRepresentationToCoord(position, spawnPosRepr);
 
-            if (!IsPositionOutOfBounds(spawnPos) && !g_forbiddenSpawnPoints.Contains(spawnPos))
+            if (!IsPositionOutOfBounds(spawnPos) && !g_forbiddenSpawnPoints.Contains(spawnPos) && spawnPos != new Vector3Int(playerSpawnPoint.x, playerSpawnPoint.y, 0) && spawnPos != new Vector3Int(monsterSpawnPoint.x, monsterSpawnPoint.y, 0) )
             {
                 levelTilemap.SetTile(spawnPos, wallTile);
                 forbiddenSpawnPoints.AddRange(GetCoordinatesAroundPoint(spawnPos));

@@ -10,6 +10,8 @@ public class PlayerController : MovingObjectController
     public Canvas winCanvas;
     public Canvas loseCanvas;
 
+    public InstanceManager instanceManager;
+
     public void OnMove(InputValue value)
     {
         _acceleration = value.Get<Vector2>();
@@ -22,6 +24,7 @@ public class PlayerController : MovingObjectController
 
     public void OnCollected()
     {
+        Time.timeScale = 0;
         winCanvas.gameObject.SetActive(true);
     }
 
@@ -29,6 +32,8 @@ public class PlayerController : MovingObjectController
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
+            instanceManager.Clear();
+            Time.timeScale = 0;
             loseCanvas.gameObject.SetActive(true);
         }
     }

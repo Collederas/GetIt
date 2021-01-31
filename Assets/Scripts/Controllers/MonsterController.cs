@@ -9,7 +9,8 @@ public class MonsterController : MonoBehaviour
 {
     private AIPath _pathFinder;
     private GraphNode _currentNode;
-    
+    public Canvas winCanvas;
+    public Canvas loseCanvas;
     private void Start()
     {
         _pathFinder = GetComponent<AIPath>();
@@ -27,7 +28,6 @@ public class MonsterController : MonoBehaviour
     
     private void Update()
     {
-        Debug.Log(_pathFinder.velocity.magnitude);
         if (_pathFinder.velocity.magnitude < 0.1)
             _pathFinder.destination = PickRandomPoint();
 
@@ -38,6 +38,7 @@ public class MonsterController : MonoBehaviour
 
     public void OnCollected()
     {
-        Debug.Log("You Lose");
+        Time.timeScale = 0;
+        loseCanvas.gameObject.SetActive(true);
     }
 }

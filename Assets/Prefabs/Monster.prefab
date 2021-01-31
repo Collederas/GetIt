@@ -16,9 +16,9 @@ GameObject:
   - component: {fileID: 2086355173974790276}
   - component: {fileID: 2086355173974790278}
   - component: {fileID: 2086355173974790277}
-  - component: {fileID: 2086355173974790281}
   - component: {fileID: 2086355173974790279}
-  m_Layer: 4
+  - component: {fileID: 1646037203}
+  m_Layer: 0
   m_Name: Monster
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 2
-  radius: 0.5
+  radius: 1
   height: 2
   repathRate: 0.5
   canSearch: 1
@@ -102,7 +102,7 @@ MonoBehaviour:
   alwaysDrawGizmos: 1
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
-  constrainInsideGraph: 0
+  constrainInsideGraph: 1
 --- !u!95 &2086355173974790283
 Animator:
   serializedVersion: 3
@@ -199,6 +199,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8a6896a1163442d9bdcc67a4d9dea2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  winCanvas: {fileID: 0}
+  loseCanvas: {fileID: 0}
 --- !u!50 &2086355173974790277
 Rigidbody2D:
   serializedVersion: 4
@@ -220,32 +222,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &2086355173974790281
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2086355173974790285}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.09147787, y: -0.022869468}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.81704426, y: 0.95426106}
-  m_EdgeRadius: 0
 --- !u!114 &2086355173974790279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,4 +239,20 @@ MonoBehaviour:
     m_AssetGUID: 64cf15e92f9144ecf9af7c95ab031730
     m_SubObjectName: 
     m_SubObjectType: 
-  instanceManager: {fileID: 0}
+  instanceManager: {fileID: 11400000, guid: 4e912adc2c9d5428f98dbc432fd7e484, type: 2}
+--- !u!58 &1646037203
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086355173974790285}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.11015594, y: -0.03480506}
+  serializedVersion: 2
+  m_Radius: 0.32345164

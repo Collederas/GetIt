@@ -201,6 +201,7 @@ MonoBehaviour:
   speed: 5
   winCanvas: {fileID: 0}
   loseCanvas: {fileID: 0}
+  instanceManager: {fileID: 11400000, guid: 4e912adc2c9d5428f98dbc432fd7e484, type: 2}
 --- !u!114 &1659127736358603800
 MonoBehaviour:
   m_ObjectHideFlags: 0
