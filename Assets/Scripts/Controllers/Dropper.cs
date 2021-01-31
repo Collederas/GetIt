@@ -28,7 +28,6 @@ public class Dropper : MonoBehaviour
         _dropped = false;
         _currentTime = 0;
         _dropTime = Random.Range(5, maxDropTime);
-        // instanceManager.Clear();
     }
     private void Update()
     {

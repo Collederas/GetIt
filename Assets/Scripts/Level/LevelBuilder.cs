@@ -19,6 +19,7 @@ public class LevelBuilder : MonoBehaviour
     public Tilemap levelTilemap;
     public Canvas winCanvas;
     public Canvas loseCanvas;
+    public Canvas menuCanvas;
 
     public Dropper dropper;
 
@@ -49,7 +50,14 @@ public class LevelBuilder : MonoBehaviour
         return new Vector2Int(xCoord, yCoord);
     }
 
-    public void NewLevel()
+    private void GenerateLevelBoundaries()
+    {
+        var xSize = Random.Range(15, 20);
+        var ySize = Random.Range(10, 16);
+        levelBoundaries = new Vector2Int(xSize, ySize);
+    }
+    
+    public void NewLevel(bool increaseHighScore=true)
     {
         while (Vector2.Distance(playerSpawnPoint, monsterSpawnPoint) < 3)
         {
@@ -57,10 +65,13 @@ public class LevelBuilder : MonoBehaviour
             monsterSpawnPoint = GetRandomPoint();
         }
         
+        GenerateLevelBoundaries();
+        
         monster.transform.position = new Vector3(monsterSpawnPoint.x, monsterSpawnPoint.y , 0);
         player.transform.position = new Vector3(playerSpawnPoint.x, playerSpawnPoint.y , 0);
         
-        _levelReached++;
+        if(increaseHighScore)
+            _levelReached++;
 
         if (_levelReached > PlayerPrefs.GetInt("HighScore"))
         {
@@ -74,6 +85,8 @@ public class LevelBuilder : MonoBehaviour
         canvasText.text = "You reached Level: " + (_levelReached + 1);
         loseCanvas.gameObject.SetActive(false);
         winCanvas.gameObject.SetActive(false);
+        menuCanvas.gameObject.SetActive(false);
+        menuCanvas.gameObject.GetComponent<MenuManager>().canOpen = true;
         dropper.Initialize();
         var startingPoint = new Vector3Int((int)-levelBoundaries.x / 2, (int)levelBoundaries.y / 2, 0);
         _positionIteratorRef = startingPoint;

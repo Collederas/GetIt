@@ -9,6 +9,7 @@ public class PlayerController : MovingObjectController
     public float speed = 5f;
     public Canvas winCanvas;
     public Canvas loseCanvas;
+    public Canvas menuCanvas;
 
     public InstanceManager instanceManager;
 
@@ -25,6 +26,7 @@ public class PlayerController : MovingObjectController
     public void OnCollected()
     {
         Time.timeScale = 0;
+        menuCanvas.gameObject.GetComponent<MenuManager>().canOpen = false;
         winCanvas.gameObject.SetActive(true);
     }
 
@@ -34,6 +36,8 @@ public class PlayerController : MovingObjectController
         {
             instanceManager.Clear();
             Time.timeScale = 0;
+            menuCanvas.gameObject.GetComponent<MenuManager>().canOpen = false;
+
             loseCanvas.gameObject.SetActive(true);
         }
     }

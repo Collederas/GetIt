@@ -11,6 +11,8 @@ public class MonsterController : MonoBehaviour
     private GraphNode _currentNode;
     public Canvas winCanvas;
     public Canvas loseCanvas;
+    public Canvas menuCanvas;
+
     private void Start()
     {
         _pathFinder = GetComponent<AIPath>();
@@ -39,6 +41,7 @@ public class MonsterController : MonoBehaviour
     public void OnCollected()
     {
         Time.timeScale = 0;
+        menuCanvas.gameObject.GetComponent<MenuManager>().canOpen = false;
         loseCanvas.gameObject.SetActive(true);
     }
 }
