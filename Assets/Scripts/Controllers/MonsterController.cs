@@ -8,8 +8,8 @@ using Random = UnityEngine.Random;
 public class MonsterController : MonoBehaviour
 {
     private AIPath _pathFinder;
-    public float pathFinderRadius;
-
+    private GraphNode _currentNode;
+    
     private void Start()
     {
         _pathFinder = GetComponent<AIPath>();
@@ -27,7 +27,12 @@ public class MonsterController : MonoBehaviour
     
     private void Update()
     {
+        Debug.Log(_pathFinder.velocity.magnitude);
+        if (_pathFinder.velocity.magnitude < 0.1)
+            _pathFinder.destination = PickRandomPoint();
+
         if (_pathFinder.pathPending || (!_pathFinder.reachedEndOfPath && _pathFinder.hasPath)) return;
+        
         _pathFinder.destination = PickRandomPoint();
     }
 

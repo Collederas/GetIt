@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -6,20 +7,29 @@ using Random = UnityEngine.Random;
 
 public class Dropper : MonoBehaviour
 {
+    public float maxDropTime = 10f;
+    
     public AssetReference drop;
     public InstanceManager instanceManager;
     private float _currentTime;
-    private bool _dropped = false;
     
     // Drop object at this time
     private float _dropTime;
+    private bool _dropped = false;
+
 
     private void Start()
     {
-        _currentTime = 0;
-        _dropTime = Random.Range(1, 2);
+        Initialize();
     }
 
+    public void Initialize()
+    {
+        _dropped = false;
+        _currentTime = 0;
+        _dropTime = Random.Range(5, maxDropTime);
+        instanceManager.Clear();
+    }
     private void Update()
     {
         if (_dropped) return;

@@ -24,8 +24,9 @@ public class InstanceManager : ScriptableObject
         };
     }
     
-    public static void ReleaseAsset(GameObject gameObject)
+    public void ReleaseAsset(GameObject gameObject)
     {
         Addressables.ReleaseInstance(gameObject);
+        _instantiatedHandles.Clear();
     }
 }
