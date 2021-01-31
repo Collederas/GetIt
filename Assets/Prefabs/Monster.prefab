@@ -18,9 +18,9 @@ GameObject:
   - component: {fileID: 2086355173974790277}
   - component: {fileID: 2086355173974790281}
   - component: {fileID: 2086355173974790279}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Monster
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -199,7 +199,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8a6896a1163442d9bdcc67a4d9dea2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathFinderRadius: 3
 --- !u!50 &2086355173974790277
 Rigidbody2D:
   serializedVersion: 4
@@ -259,7 +258,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6985b4e1e39814143950c48dc01f2632, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxDropTime: 10
   drop:
     m_AssetGUID: 64cf15e92f9144ecf9af7c95ab031730
     m_SubObjectName: 
     m_SubObjectType: 
+  instanceManager: {fileID: 0}

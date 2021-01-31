@@ -24,6 +24,7 @@ public class LevelBuilder : MonoBehaviour
     private int _levelReached = 0;
     
     private Vector3Int _positionIteratorRef;
+    private List<Vector3Int> g_forbiddenSpawnPoints = new List<Vector3Int>();
 
     private void Start()
     {
@@ -79,23 +80,42 @@ public class LevelBuilder : MonoBehaviour
             _ => Vector3Int.zero
         };
     }
+
+    private List<Vector3Int> GetCoordinatesAroundPoint(Vector3Int point)
+    {
+        var points = new List<Vector3Int>();
+        points.Add(new Vector3Int(point.x - 1, point.y, point.z));
+        points.Add(new Vector3Int(point.x + 1, point.y, point.z));
+        points.Add(new Vector3Int(point.x - 1, point.y - 1, point.z));
+        points.Add(new Vector3Int(point.x, point.y - 1, point.z));
+        
+        points.Add(new Vector3Int(point.x - 2, point.y, point.z));
+        points.Add(new Vector3Int(point.x + 2, point.y, point.z));
+        points.Add(new Vector3Int(point.x - 2, point.y - 2, point.z));
+        points.Add(new Vector3Int(point.x, point.y - 2, point.z));
+        return points;
+    }
     
     private void SpawnTileGroup(Vector3Int position)
     {
         var spawnedTiles = 0;
+        List<Vector3Int> forbiddenSpawnPoints = new List<Vector3Int>();
+        
         while (spawnedTiles < Random.Range(1, maxTilesInGroup))
         {
             var spawnPosRepr= Random.Range(1, 4);
             var spawnPos = SpawnPosRepresentationToCoord(position, spawnPosRepr);
 
-            if (!IsPositionOutOfBounds(spawnPos))
+            if (!IsPositionOutOfBounds(spawnPos) && !g_forbiddenSpawnPoints.Contains(spawnPos))
             {
                 levelTilemap.SetTile(spawnPos, wallTile);
+                forbiddenSpawnPoints.AddRange(GetCoordinatesAroundPoint(spawnPos));
                 position = spawnPos;
             }
             
             spawnedTiles++;
         }
+        g_forbiddenSpawnPoints = forbiddenSpawnPoints;
     }
 
     private void MoveIteratorRef(int moveAmountX, ref Vector3Int iterator)
@@ -157,7 +177,7 @@ public class LevelBuilder : MonoBehaviour
         int depth = levelBoundaries.y;
         float nodeSize = 1;
 
-        gg.center = new Vector3(0, 0, 0);
+        gg.center = new Vector3(0.5f, 0.5f, 0);
 
         gg.SetDimensions(width, depth, nodeSize);
         StartCoroutine(ScanGraph());
